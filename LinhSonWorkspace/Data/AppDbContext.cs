@@ -15,9 +15,9 @@ namespace LinhSonWorkspace.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            // Using SQL Server LocalDB
+            // Using SQL Server Authentication
             optionsBuilder.UseSqlServer(
-                @"Server=(localdb)\MSSQLLocalDB;Database=LinhSonWorkspaceDB;Trusted_Connection=True;TrustServerCertificate=True;");
+                @"Server=TIEN_DUC;Database=LinhSonWorkspaceDB;User Id=ducvps;Password=Mtdvpscom1@;TrustServerCertificate=True;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
