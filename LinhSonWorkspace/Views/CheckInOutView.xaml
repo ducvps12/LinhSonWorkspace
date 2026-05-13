@@ -13,15 +13,18 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,15">
-            <TextBlock Text="Check In / Check Out" FontSize="26" FontWeight="Bold" Foreground="#ccd6f6"/>
+            <TextBlock Text="✅" FontSize="24" VerticalAlignment="Center" Margin="0,0,10,0"/>
+            <TextBlock Text="Check In / Check Out" FontSize="26" FontWeight="Bold" Foreground="#1F2937"/>
             <Button Content="🔄" Command="{Binding RefreshCommand}" Style="{StaticResource SecondaryButton}" Margin="20,0,0,0" VerticalAlignment="Center"/>
         </StackPanel>
 
         <Border Grid.Row="1" Style="{StaticResource ContentCard}" Margin="0,0,0,15" Padding="15">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Lọc theo:" Foreground="#8892b0" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                <TextBlock Text="Lọc theo:" Foreground="#6B7280" VerticalAlignment="Center" Margin="0,0,10,0"/>
                 <ComboBox ItemsSource="{Binding StatusOptions}" SelectedItem="{Binding FilterStatus}" Style="{StaticResource ModernComboBox}" Width="140"/>
-                <TextBlock Text="  📅 Booking hôm nay" Foreground="#64ffda" VerticalAlignment="Center" FontWeight="SemiBold" Margin="20,0,0,0"/>
+                <Border Background="#ECFDF5" CornerRadius="6" Padding="8,4" Margin="20,0,0,0" VerticalAlignment="Center">
+                    <TextBlock Text="📅 Booking hôm nay" Foreground="#10B981" FontWeight="SemiBold" FontSize="12"/>
+                </Border>
             </StackPanel>
         </Border>
 
@@ -48,8 +51,8 @@
         </Border>
 
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,15,0,0">
-            <Button Content="📥 CHECK IN" Command="{Binding CheckInCommand}" Style="{StaticResource PrimaryButton}" Padding="25,10" FontSize="14" Margin="0,0,20,0"/>
-            <Button Content="📤 CHECK OUT" Command="{Binding CheckOutCommand}" Style="{StaticResource SuccessButton}" Padding="25,10" FontSize="14"/>
+            <Button Content="📥 CHECK IN" Command="{Binding CheckInCommand}" Style="{StaticResource PrimaryButton}" Padding="28,12" FontSize="14" Margin="0,0,20,0"/>
+            <Button Content="📤 CHECK OUT" Command="{Binding CheckOutCommand}" Style="{StaticResource SuccessButton}" Padding="28,12" FontSize="14"/>
         </StackPanel>
     </Grid>
 </UserControl>

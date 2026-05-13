@@ -12,6 +12,7 @@ namespace LinhSonWorkspace.Data
         public DbSet<Workspace> Workspaces { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<ActivityLog> ActivityLogs { get; set; }
+        public DbSet<AppSetting> AppSettings { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

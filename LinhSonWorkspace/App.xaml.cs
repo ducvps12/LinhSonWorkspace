@@ -5,15 +5,21 @@ namespace LinhSonWorkspace
 {
     public partial class App : Application
     {
-        protected override void OnStartup(StartupEventArgs e)
+        protected override async void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+
+            // Nếu vẫn bị đen màn hình, hãy bỏ comment dòng dưới đây để tắt Hardware Acceleration:
+            // System.Windows.Media.RenderOptions.ProcessRenderMode = System.Windows.Interop.RenderMode.SoftwareOnly;
 
             // Initialize database and seed data
             try
             {
-                using var context = new AppDbContext();
-                DbInitializer.Initialize(context);
+                await System.Threading.Tasks.Task.Run(() => 
+                {
+                    using var context = new AppDbContext();
+                    DbInitializer.Initialize(context);
+                });
             }
             catch (System.Exception ex)
             {

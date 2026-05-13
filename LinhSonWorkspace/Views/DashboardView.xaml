@@ -11,44 +11,55 @@
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel>
             <!-- Title -->
-            <TextBlock Text="Dashboard" FontSize="26" FontWeight="Bold" Foreground="#ccd6f6" Margin="0,0,0,20"/>
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                <TextBlock Text="📊" FontSize="24" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                <TextBlock Text="Dashboard" FontSize="26" FontWeight="Bold" Foreground="#1F2937"/>
+            </StackPanel>
 
             <!-- Stats Cards -->
             <UniformGrid Columns="4" Margin="0,0,0,20">
                 <!-- Today Bookings -->
                 <Border Style="{StaticResource StatsCard}" Margin="0,0,10,0">
                     <StackPanel>
-                        <TextBlock Text="📅" FontSize="28"/>
-                        <TextBlock Text="{Binding TodayBookings}" FontSize="32" FontWeight="Bold" Foreground="#00b4d8"/>
-                        <TextBlock Text="Booking hôm nay" Foreground="#8892b0" FontSize="12"/>
+                        <Border Background="#FFF7ED" CornerRadius="10" Width="44" Height="44" HorizontalAlignment="Left" Margin="0,0,0,10">
+                            <TextBlock Text="📅" FontSize="22" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <TextBlock Text="{Binding TodayBookings}" FontSize="32" FontWeight="Bold" Foreground="#E86830"/>
+                        <TextBlock Text="Booking hôm nay" Foreground="#6B7280" FontSize="12"/>
                     </StackPanel>
                 </Border>
 
                 <!-- Active Workspaces -->
                 <Border Style="{StaticResource StatsCard}" Margin="5,0">
                     <StackPanel>
-                        <TextBlock Text="🏢" FontSize="28"/>
-                        <TextBlock Text="{Binding ActiveWorkspaces}" FontSize="32" FontWeight="Bold" Foreground="#64ffda"/>
-                        <TextBlock Text="Đang sử dụng" Foreground="#8892b0" FontSize="12"/>
+                        <Border Background="#ECFDF5" CornerRadius="10" Width="44" Height="44" HorizontalAlignment="Left" Margin="0,0,0,10">
+                            <TextBlock Text="🏢" FontSize="22" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <TextBlock Text="{Binding ActiveWorkspaces}" FontSize="32" FontWeight="Bold" Foreground="#10B981"/>
+                        <TextBlock Text="Đang sử dụng" Foreground="#6B7280" FontSize="12"/>
                     </StackPanel>
                 </Border>
 
                 <!-- Today Revenue -->
                 <Border Style="{StaticResource StatsCard}" Margin="5,0">
                     <StackPanel>
-                        <TextBlock Text="💰" FontSize="28"/>
+                        <Border Background="#FFFBEB" CornerRadius="10" Width="44" Height="44" HorizontalAlignment="Left" Margin="0,0,0,10">
+                            <TextBlock Text="💰" FontSize="22" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
                         <TextBlock Text="{Binding TodayRevenue, Converter={StaticResource CurrencyConverter}}" 
-                                   FontSize="20" FontWeight="Bold" Foreground="#f59e0b"/>
-                        <TextBlock Text="Doanh thu hôm nay" Foreground="#8892b0" FontSize="12"/>
+                                   FontSize="20" FontWeight="Bold" Foreground="#F59E0B"/>
+                        <TextBlock Text="Doanh thu hôm nay" Foreground="#6B7280" FontSize="12"/>
                     </StackPanel>
                 </Border>
 
                 <!-- Total Customers -->
                 <Border Style="{StaticResource StatsCard}" Margin="10,0,0,0">
                     <StackPanel>
-                        <TextBlock Text="👥" FontSize="28"/>
-                        <TextBlock Text="{Binding TotalCustomers}" FontSize="32" FontWeight="Bold" Foreground="#a78bfa"/>
-                        <TextBlock Text="Khách hàng" Foreground="#8892b0" FontSize="12"/>
+                        <Border Background="#F5F3FF" CornerRadius="10" Width="44" Height="44" HorizontalAlignment="Left" Margin="0,0,0,10">
+                            <TextBlock Text="👥" FontSize="22" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <TextBlock Text="{Binding TotalCustomers}" FontSize="32" FontWeight="Bold" Foreground="#8B5CF6"/>
+                        <TextBlock Text="Khách hàng" Foreground="#6B7280" FontSize="12"/>
                     </StackPanel>
                 </Border>
             </UniformGrid>
@@ -63,7 +74,7 @@
                 <!-- Upcoming Bookings -->
                 <Border Grid.Column="0" Style="{StaticResource ContentCard}" Margin="0,0,10,0">
                     <StackPanel>
-                        <TextBlock Text="📋 Booking sắp tới" FontSize="16" FontWeight="SemiBold" Foreground="#ccd6f6" Margin="0,0,0,10"/>
+                        <TextBlock Text="📋 Booking sắp tới" FontSize="16" FontWeight="SemiBold" Foreground="#1F2937" Margin="0,0,0,12"/>
                         <DataGrid ItemsSource="{Binding UpcomingBookings}" AutoGenerateColumns="False"
                                   Style="{StaticResource ModernDataGrid}" MaxHeight="250">
                             <DataGrid.Columns>
@@ -89,7 +100,7 @@
                 <!-- Recent Bookings -->
                 <Border Grid.Column="1" Style="{StaticResource ContentCard}" Margin="10,0,0,0">
                     <StackPanel>
-                        <TextBlock Text="🕐 Booking gần đây" FontSize="16" FontWeight="SemiBold" Foreground="#ccd6f6" Margin="0,0,0,10"/>
+                        <TextBlock Text="🕐 Booking gần đây" FontSize="16" FontWeight="SemiBold" Foreground="#1F2937" Margin="0,0,0,12"/>
                         <DataGrid ItemsSource="{Binding RecentBookings}" AutoGenerateColumns="False"
                                   Style="{StaticResource ModernDataGrid}" MaxHeight="250">
                             <DataGrid.Columns>

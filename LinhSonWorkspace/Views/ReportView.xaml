@@ -9,14 +9,17 @@
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel>
-            <TextBlock Text="Báo cáo &amp; Thống kê" FontSize="26" FontWeight="Bold" Foreground="#ccd6f6" Margin="0,0,0,15"/>
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                <TextBlock Text="📈" FontSize="24" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                <TextBlock Text="Báo cáo &amp; Thống kê" FontSize="26" FontWeight="Bold" Foreground="#1F2937"/>
+            </StackPanel>
 
             <!-- Date Range -->
             <Border Style="{StaticResource ContentCard}" Margin="0,0,0,15" Padding="15">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Từ ngày:" Foreground="#8892b0" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                    <TextBlock Text="Từ ngày:" Foreground="#6B7280" VerticalAlignment="Center" Margin="0,0,5,0"/>
                     <DatePicker SelectedDate="{Binding DateFrom}" Width="140" Margin="0,0,15,0"/>
-                    <TextBlock Text="Đến ngày:" Foreground="#8892b0" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                    <TextBlock Text="Đến ngày:" Foreground="#6B7280" VerticalAlignment="Center" Margin="0,0,5,0"/>
                     <DatePicker SelectedDate="{Binding DateTo}" Width="140" Margin="0,0,15,0"/>
                     <Button Content="🔄 Cập nhật" Command="{Binding RefreshCommand}" Style="{StaticResource PrimaryButton}"/>
                 </StackPanel>
@@ -26,30 +29,38 @@
             <UniformGrid Columns="4" Margin="0,0,0,20">
                 <Border Style="{StaticResource StatsCard}" Margin="0,0,10,0">
                     <StackPanel>
-                        <TextBlock Text="💰" FontSize="24"/>
-                        <TextBlock Text="{Binding TotalRevenue, Converter={StaticResource CurrencyConverter}}" FontSize="18" FontWeight="Bold" Foreground="#f59e0b"/>
-                        <TextBlock Text="Tổng doanh thu" Foreground="#8892b0" FontSize="11"/>
+                        <Border Background="#FFFBEB" CornerRadius="10" Width="40" Height="40" HorizontalAlignment="Left" Margin="0,0,0,8">
+                            <TextBlock Text="💰" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <TextBlock Text="{Binding TotalRevenue, Converter={StaticResource CurrencyConverter}}" FontSize="18" FontWeight="Bold" Foreground="#F59E0B"/>
+                        <TextBlock Text="Tổng doanh thu" Foreground="#6B7280" FontSize="11"/>
                     </StackPanel>
                 </Border>
                 <Border Style="{StaticResource StatsCard}" Margin="5,0">
                     <StackPanel>
-                        <TextBlock Text="📅" FontSize="24"/>
-                        <TextBlock Text="{Binding TotalBookings}" FontSize="28" FontWeight="Bold" Foreground="#00b4d8"/>
-                        <TextBlock Text="Tổng booking" Foreground="#8892b0" FontSize="11"/>
+                        <Border Background="#FFF7ED" CornerRadius="10" Width="40" Height="40" HorizontalAlignment="Left" Margin="0,0,0,8">
+                            <TextBlock Text="📅" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <TextBlock Text="{Binding TotalBookings}" FontSize="28" FontWeight="Bold" Foreground="#E86830"/>
+                        <TextBlock Text="Tổng booking" Foreground="#6B7280" FontSize="11"/>
                     </StackPanel>
                 </Border>
                 <Border Style="{StaticResource StatsCard}" Margin="5,0">
                     <StackPanel>
-                        <TextBlock Text="✅" FontSize="24"/>
-                        <TextBlock Text="{Binding CompletedBookings}" FontSize="28" FontWeight="Bold" Foreground="#10b981"/>
-                        <TextBlock Text="Hoàn thành" Foreground="#8892b0" FontSize="11"/>
+                        <Border Background="#ECFDF5" CornerRadius="10" Width="40" Height="40" HorizontalAlignment="Left" Margin="0,0,0,8">
+                            <TextBlock Text="✅" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <TextBlock Text="{Binding CompletedBookings}" FontSize="28" FontWeight="Bold" Foreground="#10B981"/>
+                        <TextBlock Text="Hoàn thành" Foreground="#6B7280" FontSize="11"/>
                     </StackPanel>
                 </Border>
                 <Border Style="{StaticResource StatsCard}" Margin="10,0,0,0">
                     <StackPanel>
-                        <TextBlock Text="🏆" FontSize="24"/>
-                        <TextBlock Text="{Binding TopWorkspace}" FontSize="13" FontWeight="Bold" Foreground="#a78bfa" TextWrapping="Wrap"/>
-                        <TextBlock Text="Top workspace" Foreground="#8892b0" FontSize="11"/>
+                        <Border Background="#F5F3FF" CornerRadius="10" Width="40" Height="40" HorizontalAlignment="Left" Margin="0,0,0,8">
+                            <TextBlock Text="🏆" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <TextBlock Text="{Binding TopWorkspace}" FontSize="13" FontWeight="Bold" Foreground="#8B5CF6" TextWrapping="Wrap"/>
+                        <TextBlock Text="Top workspace" Foreground="#6B7280" FontSize="11"/>
                     </StackPanel>
                 </Border>
             </UniformGrid>
@@ -64,7 +75,7 @@
                 <!-- Revenue Chart -->
                 <Border Grid.Column="0" Style="{StaticResource ContentCard}" Margin="0,0,10,0">
                     <StackPanel>
-                        <TextBlock Text="📊 Doanh thu theo ngày" FontSize="14" FontWeight="SemiBold" Foreground="#ccd6f6" Margin="0,0,0,10"/>
+                        <TextBlock Text="📊 Doanh thu theo ngày" FontSize="14" FontWeight="SemiBold" Foreground="#1F2937" Margin="0,0,0,12"/>
                         <lvc:CartesianChart Series="{Binding RevenueSeries}" XAxes="{Binding RevenueXAxes}" Height="280"/>
                     </StackPanel>
                 </Border>
@@ -72,7 +83,7 @@
                 <!-- Booking Status Pie -->
                 <Border Grid.Column="1" Style="{StaticResource ContentCard}" Margin="10,0,0,0">
                     <StackPanel>
-                        <TextBlock Text="🍩 Trạng thái booking" FontSize="14" FontWeight="SemiBold" Foreground="#ccd6f6" Margin="0,0,0,10"/>
+                        <TextBlock Text="🍩 Trạng thái booking" FontSize="14" FontWeight="SemiBold" Foreground="#1F2937" Margin="0,0,0,12"/>
                         <lvc:PieChart Series="{Binding BookingStatusSeries}" Height="280"/>
                     </StackPanel>
                 </Border>

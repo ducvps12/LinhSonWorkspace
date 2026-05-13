@@ -76,6 +76,7 @@ namespace LinhSonWorkspace.ViewModels
                 "Bookings" => new BookingViewModel(),
                 "CheckInOut" => new CheckInOutViewModel(),
                 "Reports" => new ReportViewModel(),
+                "Settings" => new SettingsViewModel(),
                 _ => new DashboardViewModel()
             };
         }

@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using LinhSonWorkspace.Models;
 using BCrypt.Net;
+using Microsoft.EntityFrameworkCore;
 
 namespace LinhSonWorkspace.Data
 {
@@ -15,6 +16,16 @@ namespace LinhSonWorkspace.Data
         {
             // Ensure database is created
             context.Database.EnsureCreated();
+
+            // Force create AppSettings table if missing
+            context.Database.ExecuteSqlRaw(@"
+                IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='AppSettings' and xtype='U')
+                CREATE TABLE [AppSettings] (
+                    [Key] nvarchar(450) NOT NULL,
+                    [Value] nvarchar(max) NOT NULL,
+                    [Description] nvarchar(max) NULL,
+                    CONSTRAINT [PK_AppSettings] PRIMARY KEY ([Key])
+                );");
 
             // Check if data already seeded
             if (context.Roles.Any()) return;
@@ -85,26 +96,28 @@ namespace LinhSonWorkspace.Data
             var privateOffice = context.WorkspaceTypes.First(t => t.TypeName == "Private Office");
             var coworking = context.WorkspaceTypes.First(t => t.TypeName == "Coworking Area");
 
-            var workspaces = new Workspace[]
+            var workspaces = new System.Collections.Generic.List<Workspace>
             {
-                // Hot Desks
-                new() { Name = "Hot Desk A1", TypeId = hotDesk.TypeId, Capacity = 1, PricePerHour = 30000, PricePerDay = 200000, Status = "Available", Description = "Bàn làm việc cá nhân tầng 1, gần cửa sổ" },
-                new() { Name = "Hot Desk A2", TypeId = hotDesk.TypeId, Capacity = 1, PricePerHour = 30000, PricePerDay = 200000, Status = "Available", Description = "Bàn làm việc cá nhân tầng 1" },
-                new() { Name = "Hot Desk A3", TypeId = hotDesk.TypeId, Capacity = 1, PricePerHour = 30000, PricePerDay = 200000, Status = "Available", Description = "Bàn làm việc cá nhân tầng 1" },
-                new() { Name = "Hot Desk B1", TypeId = hotDesk.TypeId, Capacity = 1, PricePerHour = 35000, PricePerDay = 230000, Status = "Available", Description = "Bàn làm việc cá nhân tầng 2, view đẹp" },
-                new() { Name = "Hot Desk B2", TypeId = hotDesk.TypeId, Capacity = 1, PricePerHour = 35000, PricePerDay = 230000, Status = "Maintenance", Description = "Bàn làm việc cá nhân tầng 2 - đang bảo trì" },
-
-                // Meeting Rooms
-                new() { Name = "Meeting Room M1", TypeId = meetingRoom.TypeId, Capacity = 8, PricePerHour = 150000, PricePerDay = 1000000, Status = "Available", Description = "Phòng họp nhỏ, có bảng trắng và màn chiếu" },
-                new() { Name = "Meeting Room M2", TypeId = meetingRoom.TypeId, Capacity = 12, PricePerHour = 200000, PricePerDay = 1400000, Status = "Available", Description = "Phòng họp lớn, có TV 65 inch và video call" },
-
-                // Private Offices
-                new() { Name = "Private Office P1", TypeId = privateOffice.TypeId, Capacity = 4, PricePerHour = 100000, PricePerDay = 700000, Status = "Available", Description = "Phòng làm việc riêng 4 người, yên tĩnh" },
-                new() { Name = "Private Office P2", TypeId = privateOffice.TypeId, Capacity = 6, PricePerHour = 130000, PricePerDay = 900000, Status = "Available", Description = "Phòng làm việc riêng 6 người, view thành phố" },
-
-                // Coworking
-                new() { Name = "Coworking Zone C1", TypeId = coworking.TypeId, Capacity = 20, PricePerHour = 25000, PricePerDay = 170000, Status = "Available", Description = "Khu vực làm việc chung tầng 1, không gian mở" }
+                // Meeting Rooms & Offices
+                new() { Name = "Meeting Room M1", TypeId = meetingRoom.TypeId, Capacity = 8, PricePerHour = 150000, PricePerDay = 1000000, Status = "Available", Description = "Phòng họp nhỏ" },
+                new() { Name = "Private Office P1", TypeId = privateOffice.TypeId, Capacity = 4, PricePerHour = 100000, PricePerDay = 700000, Status = "Available", Description = "Phòng làm việc riêng" }
             };
+
+            // 20 Slots (Hot Desks) for 3D visual seat map layout
+            for (int i = 1; i <= 20; i++)
+            {
+                workspaces.Add(new Workspace
+                {
+                    Name = $"Slot {i:D2}",
+                    TypeId = hotDesk.TypeId,
+                    Capacity = 1,
+                    PricePerHour = 30000,
+                    PricePerDay = 200000,
+                    Status = "Available",
+                    Description = $"Chỗ ngồi cá nhân số {i:D2}"
+                });
+            }
+
             context.Workspaces.AddRange(workspaces);
             context.SaveChanges();
 

@@ -18,9 +18,10 @@
 
         <!-- Title -->
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,15">
-            <TextBlock Text="Quản lý Workspace" FontSize="26" FontWeight="Bold" Foreground="#ccd6f6"/>
+            <TextBlock Text="🏠" FontSize="24" VerticalAlignment="Center" Margin="0,0,10,0"/>
+            <TextBlock Text="Quản lý Workspace" FontSize="26" FontWeight="Bold" Foreground="#1F2937"/>
             <Button Content="+ Thêm mới" Command="{Binding AddCommand}" Style="{StaticResource PrimaryButton}" 
-                    Margin="20,0,0,0" VerticalAlignment="Center" Padding="15,6"/>
+                    Margin="20,0,0,0" VerticalAlignment="Center" Padding="15,8"/>
             <Button Content="🔄" Command="{Binding RefreshCommand}" Style="{StaticResource SecondaryButton}" 
                     Margin="10,0,0,0" VerticalAlignment="Center"/>
         </StackPanel>
@@ -31,10 +32,10 @@
                 <TextBlock Text="🔍" VerticalAlignment="Center" Margin="0,0,5,0"/>
                 <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" 
                          Style="{StaticResource ModernTextBox}" Width="200" Margin="0,0,15,0"/>
-                <TextBlock Text="Loại:" Foreground="#8892b0" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <TextBlock Text="Loại:" Foreground="#6B7280" VerticalAlignment="Center" Margin="0,0,5,0"/>
                 <ComboBox ItemsSource="{Binding WorkspaceTypes}" SelectedItem="{Binding FilterType}"
                           Style="{StaticResource ModernComboBox}" Width="140" Margin="0,0,15,0"/>
-                <TextBlock Text="Trạng thái:" Foreground="#8892b0" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <TextBlock Text="Trạng thái:" Foreground="#6B7280" VerticalAlignment="Center" Margin="0,0,5,0"/>
                 <ComboBox ItemsSource="{Binding StatusOptions}" SelectedItem="{Binding FilterStatus}"
                           Style="{StaticResource ModernComboBox}" Width="120"/>
             </StackPanel>
@@ -65,46 +66,47 @@
         </Border>
 
         <!-- Action buttons -->
-        <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,10,0,0">
+        <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,12,0,0">
             <Button Content="✏️ Sửa" Command="{Binding EditCommand}" Style="{StaticResource SecondaryButton}" Margin="0,0,10,0"/>
             <Button Content="🗑️ Xóa" Command="{Binding DeleteCommand}" Style="{StaticResource DangerButton}"/>
         </StackPanel>
 
         <!-- Edit Panel (Overlay) -->
-        <Border Grid.Row="0" Grid.RowSpan="4" Background="#80000000" 
+        <Border Grid.Row="0" Grid.RowSpan="4" Background="#40000000" 
                 Visibility="{Binding IsEditing, Converter={StaticResource BoolToVis}}">
-            <Border Background="#1e293b" CornerRadius="12" Padding="25" MaxWidth="450" MaxHeight="520"
+            <Border Background="#FFFFFF" CornerRadius="16" Padding="30" MaxWidth="480" MaxHeight="540"
                     VerticalAlignment="Center" HorizontalAlignment="Center"
-                    Effect="{StaticResource CardShadow}">
+                    BorderBrush="#E5E7EB" BorderThickness="1"
+                    Effect="{StaticResource ElevatedShadow}">
                 <StackPanel>
                     <TextBlock Text="{Binding IsAddMode, Converter={StaticResource BoolToVis}, ConverterParameter=Inverse}" 
-                               FontSize="18" FontWeight="Bold" Foreground="#ccd6f6" Margin="0,0,0,15"/>
-                    <TextBlock Text="Tên workspace:" Foreground="#8892b0" Margin="0,0,0,3"/>
-                    <TextBox Text="{Binding EditName}" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
-                    <TextBlock Text="Loại:" Foreground="#8892b0" Margin="0,0,0,3"/>
+                               FontSize="18" FontWeight="Bold" Foreground="#1F2937" Margin="0,0,0,18"/>
+                    <TextBlock Text="Tên workspace:" Foreground="#6B7280" FontSize="12" FontWeight="Medium" Margin="0,0,0,4"/>
+                    <TextBox Text="{Binding EditName}" Style="{StaticResource ModernTextBox}" Margin="0,0,0,12"/>
+                    <TextBlock Text="Loại:" Foreground="#6B7280" FontSize="12" FontWeight="Medium" Margin="0,0,0,4"/>
                     <ComboBox ItemsSource="{Binding AllTypes}" DisplayMemberPath="TypeName" SelectedValuePath="TypeId"
-                              SelectedValue="{Binding EditTypeId}" Style="{StaticResource ModernComboBox}" Margin="0,0,0,10"/>
-                    <TextBlock Text="Sức chứa:" Foreground="#8892b0" Margin="0,0,0,3"/>
-                    <TextBox Text="{Binding EditCapacity}" Style="{StaticResource ModernTextBox}" Margin="0,0,0,10"/>
+                              SelectedValue="{Binding EditTypeId}" Style="{StaticResource ModernComboBox}" Margin="0,0,0,12"/>
+                    <TextBlock Text="Sức chứa:" Foreground="#6B7280" FontSize="12" FontWeight="Medium" Margin="0,0,0,4"/>
+                    <TextBox Text="{Binding EditCapacity}" Style="{StaticResource ModernTextBox}" Margin="0,0,0,12"/>
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition/><ColumnDefinition Width="10"/><ColumnDefinition/>
+                            <ColumnDefinition/><ColumnDefinition Width="12"/><ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0">
-                            <TextBlock Text="Giá/Giờ:" Foreground="#8892b0" Margin="0,0,0,3"/>
+                            <TextBlock Text="Giá/Giờ:" Foreground="#6B7280" FontSize="12" FontWeight="Medium" Margin="0,0,0,4"/>
                             <TextBox Text="{Binding EditPricePerHour}" Style="{StaticResource ModernTextBox}"/>
                         </StackPanel>
                         <StackPanel Grid.Column="2">
-                            <TextBlock Text="Giá/Ngày:" Foreground="#8892b0" Margin="0,0,0,3"/>
+                            <TextBlock Text="Giá/Ngày:" Foreground="#6B7280" FontSize="12" FontWeight="Medium" Margin="0,0,0,4"/>
                             <TextBox Text="{Binding EditPricePerDay}" Style="{StaticResource ModernTextBox}"/>
                         </StackPanel>
                     </Grid>
-                    <TextBlock Text="Trạng thái:" Foreground="#8892b0" Margin="0,10,0,3"/>
+                    <TextBlock Text="Trạng thái:" Foreground="#6B7280" FontSize="12" FontWeight="Medium" Margin="0,10,0,4"/>
                     <ComboBox ItemsSource="{Binding StatusOptions}" SelectedItem="{Binding EditStatus}"
-                              Style="{StaticResource ModernComboBox}" Margin="0,0,0,10"/>
-                    <TextBlock Text="Mô tả:" Foreground="#8892b0" Margin="0,0,0,3"/>
+                              Style="{StaticResource ModernComboBox}" Margin="0,0,0,12"/>
+                    <TextBlock Text="Mô tả:" Foreground="#6B7280" FontSize="12" FontWeight="Medium" Margin="0,0,0,4"/>
                     <TextBox Text="{Binding EditDescription}" Style="{StaticResource ModernTextBox}" 
-                             TextWrapping="Wrap" AcceptsReturn="True" Height="60" Margin="0,0,0,15"/>
+                             TextWrapping="Wrap" AcceptsReturn="True" Height="60" Margin="0,0,0,18"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                         <Button Content="Hủy" Command="{Binding CancelEditCommand}" Style="{StaticResource SecondaryButton}" Margin="0,0,10,0"/>
                         <Button Content="💾 Lưu" Command="{Binding SaveCommand}" Style="{StaticResource PrimaryButton}"/>
