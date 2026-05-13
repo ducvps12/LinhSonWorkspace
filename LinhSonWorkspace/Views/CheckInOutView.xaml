@@ -18,12 +18,12 @@
             <Button Content="🔄" Command="{Binding RefreshCommand}" Style="{StaticResource SecondaryButton}" Margin="20,0,0,0" VerticalAlignment="Center"/>
         </StackPanel>
 
-        <Border Grid.Row="1" Style="{StaticResource ContentCard}" Margin="0,0,0,15" Padding="15">
+        <Border Grid.Row="1" Style="{StaticResource ContentCard}" Margin="0,0,0,15" Padding="12,8">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Lọc theo:" Foreground="#6B7280" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                <ComboBox ItemsSource="{Binding StatusOptions}" SelectedItem="{Binding FilterStatus}" Style="{StaticResource ModernComboBox}" Width="140"/>
-                <Border Background="#ECFDF5" CornerRadius="6" Padding="8,4" Margin="20,0,0,0" VerticalAlignment="Center">
-                    <TextBlock Text="📅 Booking hôm nay" Foreground="#10B981" FontWeight="SemiBold" FontSize="12"/>
+                <TextBlock Text="Lọc theo:" Foreground="#6B7280" VerticalAlignment="Center" Margin="0,0,10,0" FontSize="12"/>
+                <ComboBox ItemsSource="{Binding StatusOptions}" SelectedItem="{Binding FilterStatus}" Style="{StaticResource ModernComboBox}" Width="130" Height="32" FontSize="12"/>
+                <Border Background="#ECFDF5" CornerRadius="6" Padding="8,4" Margin="15,0,0,0" VerticalAlignment="Center">
+                    <TextBlock Text="📅 Booking hôm nay" Foreground="#10B981" FontWeight="SemiBold" FontSize="11"/>
                 </Border>
             </StackPanel>
         </Border>

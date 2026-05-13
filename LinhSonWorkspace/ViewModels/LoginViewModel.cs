@@ -1,3 +1,5 @@
+using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using LinhSonWorkspace.Helpers;
@@ -8,6 +10,7 @@ namespace LinhSonWorkspace.ViewModels
     public class LoginViewModel : BaseViewModel
     {
         private readonly AuthService _authService = new();
+        private readonly GoogleAuthService _googleAuthService = new();
 
         private string _username = string.Empty;
         public string Username
@@ -38,6 +41,7 @@ namespace LinhSonWorkspace.ViewModels
         }
 
         public ICommand LoginCommand { get; }
+        public ICommand GoogleLoginCommand { get; }
 
         // Event to notify successful login
         public event System.Action? LoginSucceeded;
@@ -45,6 +49,7 @@ namespace LinhSonWorkspace.ViewModels
         public LoginViewModel()
         {
             LoginCommand = new RelayCommand(ExecuteLogin, () => !IsLoading);
+            GoogleLoginCommand = new AsyncRelayCommand(ExecuteGoogleLogin, () => !IsLoading);
         }
 
         private void ExecuteLogin()
@@ -77,6 +82,36 @@ namespace LinhSonWorkspace.ViewModels
             }
 
             IsLoading = false;
+        }
+
+        private async Task ExecuteGoogleLogin()
+        {
+            ErrorMessage = string.Empty;
+            IsLoading = true;
+
+            try
+            {
+                var (user, error) = await _googleAuthService.LoginWithGoogleAsync();
+
+                if (user != null)
+                {
+                    SessionHelper.CurrentUser = user;
+                    // Must invoke on UI thread
+                    Application.Current.Dispatcher.Invoke(() => LoginSucceeded?.Invoke());
+                }
+                else
+                {
+                    ErrorMessage = error ?? "Đăng nhập Google thất bại";
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = $"Lỗi kết nối Google: {ex.Message}";
+            }
+            finally
+            {
+                IsLoading = false;
+            }
         }
     }
 }

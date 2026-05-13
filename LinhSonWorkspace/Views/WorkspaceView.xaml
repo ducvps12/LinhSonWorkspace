@@ -26,18 +26,19 @@
                     Margin="10,0,0,0" VerticalAlignment="Center"/>
         </StackPanel>
 
-        <!-- Filters -->
-        <Border Grid.Row="1" Style="{StaticResource ContentCard}" Margin="0,0,0,15" Padding="15">
+        <!-- Compact Filter Bar - matching CheckInOut style -->
+        <Border Grid.Row="1" Style="{StaticResource ContentCard}" Margin="0,0,0,15" Padding="12,8">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="🔍" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <TextBlock Text="🔍" VerticalAlignment="Center" Margin="0,0,8,0" FontSize="14"/>
                 <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" 
-                         Style="{StaticResource ModernTextBox}" Width="200" Margin="0,0,15,0"/>
-                <TextBlock Text="Loại:" Foreground="#6B7280" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                         Style="{StaticResource ModernTextBox}" Width="180" Height="32" 
+                         FontSize="12" Padding="8,4" VerticalContentAlignment="Center" Margin="0,0,15,0"/>
+                <TextBlock Text="Loại:" Foreground="#6B7280" VerticalAlignment="Center" Margin="0,0,5,0" FontSize="12"/>
                 <ComboBox ItemsSource="{Binding WorkspaceTypes}" SelectedItem="{Binding FilterType}"
-                          Style="{StaticResource ModernComboBox}" Width="140" Margin="0,0,15,0"/>
-                <TextBlock Text="Trạng thái:" Foreground="#6B7280" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                          Style="{StaticResource ModernComboBox}" Width="130" Height="32" FontSize="12" Margin="0,0,15,0"/>
+                <TextBlock Text="Trạng thái:" Foreground="#6B7280" VerticalAlignment="Center" Margin="0,0,5,0" FontSize="12"/>
                 <ComboBox ItemsSource="{Binding StatusOptions}" SelectedItem="{Binding FilterStatus}"
-                          Style="{StaticResource ModernComboBox}" Width="120"/>
+                          Style="{StaticResource ModernComboBox}" Width="110" Height="32" FontSize="12"/>
             </StackPanel>
         </Border>
 

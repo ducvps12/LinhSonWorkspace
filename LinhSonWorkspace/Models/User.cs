@@ -25,11 +25,18 @@ namespace LinhSonWorkspace.Models
         [MaxLength(100)]
         public string Email { get; set; } = string.Empty;
 
+        [MaxLength(20)]
+        public string Phone { get; set; } = string.Empty;
+
         public int RoleId { get; set; }
 
         public bool IsActive { get; set; } = true;
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+        // Google Auth
+        [MaxLength(200)]
+        public string? GoogleId { get; set; }
 
         // Navigation
         [ForeignKey("RoleId")]

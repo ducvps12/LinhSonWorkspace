@@ -34,6 +34,10 @@ namespace LinhSonWorkspace.ViewModels
         public string EditPhone { get => _editPhone; set => SetProperty(ref _editPhone, value); }
         private string _editEmail = "";
         public string EditEmail { get => _editEmail; set => SetProperty(ref _editEmail, value); }
+        private string _editCompany = "";
+        public string EditCompany { get => _editCompany; set => SetProperty(ref _editCompany, value); }
+        private string _editAddress = "";
+        public string EditAddress { get => _editAddress; set => SetProperty(ref _editAddress, value); }
         private string _editNote = "";
         public string EditNote { get => _editNote; set => SetProperty(ref _editNote, value); }
 
@@ -47,7 +51,7 @@ namespace LinhSonWorkspace.ViewModels
         public CustomerViewModel()
         {
             RefreshCommand = new AsyncRelayCommand(LoadDataAsync);
-            AddCommand = new RelayCommand(() => { IsAddMode = true; IsEditing = true; EditName = ""; EditPhone = ""; EditEmail = ""; EditNote = ""; });
+            AddCommand = new RelayCommand(() => { IsAddMode = true; IsEditing = true; EditName = ""; EditPhone = ""; EditEmail = ""; EditCompany = ""; EditAddress = ""; EditNote = ""; });
             EditCommand = new RelayCommand(StartEdit);
             DeleteCommand = new AsyncRelayCommand(DeleteAsync);
             SaveCommand = new AsyncRelayCommand(SaveAsync);
@@ -60,7 +64,7 @@ namespace LinhSonWorkspace.ViewModels
             using var context = new AppDbContext();
             var query = context.Customers.AsQueryable();
             if (!string.IsNullOrWhiteSpace(SearchText))
-                query = query.Where(c => c.FullName.Contains(SearchText) || c.Phone.Contains(SearchText) || c.Email.Contains(SearchText));
+                query = query.Where(c => c.FullName.Contains(SearchText) || c.Phone.Contains(SearchText) || c.Email.Contains(SearchText) || c.Company.Contains(SearchText));
             Customers = new ObservableCollection<Customer>(await query.OrderBy(c => c.FullName).ToListAsync());
         }
 
@@ -69,7 +73,8 @@ namespace LinhSonWorkspace.ViewModels
             if (SelectedCustomer == null) { MessageBox.Show("Vui lòng chọn khách hàng."); return; }
             IsAddMode = false; IsEditing = true;
             EditName = SelectedCustomer.FullName; EditPhone = SelectedCustomer.Phone;
-            EditEmail = SelectedCustomer.Email; EditNote = SelectedCustomer.Note;
+            EditEmail = SelectedCustomer.Email; EditCompany = SelectedCustomer.Company;
+            EditAddress = SelectedCustomer.Address; EditNote = SelectedCustomer.Note;
         }
 
         private async Task SaveAsync()
@@ -78,7 +83,7 @@ namespace LinhSonWorkspace.ViewModels
             using var context = new AppDbContext();
             if (IsAddMode)
             {
-                var c = new Customer { FullName = EditName, Phone = EditPhone, Email = EditEmail, Note = EditNote, CreatedAt = DateTime.Now };
+                var c = new Customer { FullName = EditName, Phone = EditPhone, Email = EditEmail, Company = EditCompany, Address = EditAddress, Note = EditNote, CreatedAt = DateTime.Now };
                 context.Customers.Add(c);
                 await context.SaveChangesAsync();
                 await _logService.LogActivityAsync("CREATE_CUSTOMER", $"Created customer: {c.FullName}");
@@ -86,7 +91,7 @@ namespace LinhSonWorkspace.ViewModels
             else if (SelectedCustomer != null)
             {
                 var c = await context.Customers.FindAsync(SelectedCustomer.CustomerId);
-                if (c != null) { c.FullName = EditName; c.Phone = EditPhone; c.Email = EditEmail; c.Note = EditNote; await context.SaveChangesAsync(); }
+                if (c != null) { c.FullName = EditName; c.Phone = EditPhone; c.Email = EditEmail; c.Company = EditCompany; c.Address = EditAddress; c.Note = EditNote; await context.SaveChangesAsync(); }
                 await _logService.LogActivityAsync("UPDATE_CUSTOMER", $"Updated customer: {EditName}");
             }
             IsEditing = false;

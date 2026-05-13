@@ -18,10 +18,17 @@
             <Button Content="🔄" Command="{Binding RefreshCommand}" Style="{StaticResource SecondaryButton}" Margin="10,0,0,0" VerticalAlignment="Center"/>
         </StackPanel>
 
-        <Border Grid.Row="1" Style="{StaticResource ContentCard}" Margin="0,0,0,15" Padding="15">
+        <!-- Compact Filter Bar - matching CheckInOut style -->
+        <Border Grid.Row="1" Style="{StaticResource ContentCard}" Margin="0,0,0,15" Padding="12,8">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="🔍" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBox}" Width="300"/>
+                <TextBlock Text="🔍" VerticalAlignment="Center" Margin="0,0,8,0" FontSize="14"/>
+                <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" 
+                         Style="{StaticResource ModernTextBox}" Width="250" Height="32" 
+                         FontSize="12" Padding="8,4" VerticalContentAlignment="Center"/>
+                <Border Background="#ECFDF5" CornerRadius="6" Padding="8,4" Margin="15,0,0,0" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding Customers.Count, StringFormat='📋 {0} khách hàng'}" 
+                               Foreground="#10B981" FontWeight="SemiBold" FontSize="11"/>
+                </Border>
             </StackPanel>
         </Border>
 
@@ -31,6 +38,7 @@
                     <DataGridTextColumn Header="Họ tên" Binding="{Binding FullName}" Width="*"/>
                     <DataGridTextColumn Header="SĐT" Binding="{Binding Phone}" Width="120"/>
                     <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="180"/>
+                    <DataGridTextColumn Header="Công ty" Binding="{Binding Company}" Width="130"/>
                     <DataGridTextColumn Header="Ghi chú" Binding="{Binding Note}" Width="*"/>
                     <DataGridTextColumn Header="Ngày tạo" Binding="{Binding CreatedAt, StringFormat=dd/MM/yyyy}" Width="100"/>
                 </DataGrid.Columns>
@@ -42,22 +50,70 @@
             <Button Content="🗑️ Xóa" Command="{Binding DeleteCommand}" Style="{StaticResource DangerButton}"/>
         </StackPanel>
 
-        <!-- Edit Overlay -->
+        <!-- Edit Overlay - Expanded for Desktop -->
         <Border Grid.Row="0" Grid.RowSpan="4" Background="#40000000" Visibility="{Binding IsEditing, Converter={StaticResource BoolToVis}}">
-            <Border Background="#FFFFFF" CornerRadius="16" Padding="30" MaxWidth="450" MaxHeight="420" 
+            <Border Background="#FFFFFF" CornerRadius="16" Padding="30" MaxWidth="600" MaxHeight="580" 
                     VerticalAlignment="Center" HorizontalAlignment="Center"
                     BorderBrush="#E5E7EB" BorderThickness="1"
                     Effect="{StaticResource ElevatedShadow}">
                 <StackPanel>
-                    <TextBlock Text="Thông tin Khách hàng" FontSize="18" FontWeight="Bold" Foreground="#1F2937" Margin="0,0,0,18"/>
-                    <TextBlock Text="Họ tên:" Foreground="#6B7280" FontSize="12" FontWeight="Medium" Margin="0,0,0,4"/>
-                    <TextBox Text="{Binding EditName}" Style="{StaticResource ModernTextBox}" Margin="0,0,0,12"/>
-                    <TextBlock Text="SĐT:" Foreground="#6B7280" FontSize="12" FontWeight="Medium" Margin="0,0,0,4"/>
-                    <TextBox Text="{Binding EditPhone}" Style="{StaticResource ModernTextBox}" Margin="0,0,0,12"/>
-                    <TextBlock Text="Email:" Foreground="#6B7280" FontSize="12" FontWeight="Medium" Margin="0,0,0,4"/>
-                    <TextBox Text="{Binding EditEmail}" Style="{StaticResource ModernTextBox}" Margin="0,0,0,12"/>
-                    <TextBlock Text="Ghi chú:" Foreground="#6B7280" FontSize="12" FontWeight="Medium" Margin="0,0,0,4"/>
-                    <TextBox Text="{Binding EditNote}" Style="{StaticResource ModernTextBox}" TextWrapping="Wrap" Height="50" Margin="0,0,0,18"/>
+                    <TextBlock FontSize="20" FontWeight="Bold" Foreground="#1F2937" Margin="0,0,0,20">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Text" Value="✏️ Chỉnh sửa Khách hàng"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsAddMode}" Value="True">
+                                        <Setter Property="Text" Value="➕ Thêm Khách hàng mới"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+
+                    <Border Height="1" Background="#F3F4F6" Margin="0,0,0,18"/>
+
+                    <!-- Row 1: Name & Phone -->
+                    <Grid Margin="0,0,0,14">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/><ColumnDefinition Width="15"/><ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Họ tên *" Foreground="#6B7280" FontSize="12" FontWeight="Medium" Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding EditName}" Style="{StaticResource ModernTextBox}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Số điện thoại" Foreground="#6B7280" FontSize="12" FontWeight="Medium" Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding EditPhone}" Style="{StaticResource ModernTextBox}"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Row 2: Email & Company -->
+                    <Grid Margin="0,0,0,14">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/><ColumnDefinition Width="15"/><ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Email" Foreground="#6B7280" FontSize="12" FontWeight="Medium" Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding EditEmail}" Style="{StaticResource ModernTextBox}"/>
+                        </StackPanel>
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="Công ty / Tổ chức" Foreground="#6B7280" FontSize="12" FontWeight="Medium" Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding EditCompany}" Style="{StaticResource ModernTextBox}"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Row 3: Address -->
+                    <StackPanel Margin="0,0,0,14">
+                        <TextBlock Text="Địa chỉ" Foreground="#6B7280" FontSize="12" FontWeight="Medium" Margin="0,0,0,4"/>
+                        <TextBox Text="{Binding EditAddress}" Style="{StaticResource ModernTextBox}"/>
+                    </StackPanel>
+
+                    <!-- Row 4: Note -->
+                    <StackPanel Margin="0,0,0,20">
+                        <TextBlock Text="Ghi chú" Foreground="#6B7280" FontSize="12" FontWeight="Medium" Margin="0,0,0,4"/>
+                        <TextBox Text="{Binding EditNote}" Style="{StaticResource ModernTextBox}" TextWrapping="Wrap" AcceptsReturn="True" Height="70"/>
+                    </StackPanel>
+
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                         <Button Content="Hủy" Command="{Binding CancelEditCommand}" Style="{StaticResource SecondaryButton}" Margin="0,0,10,0"/>
                         <Button Content="💾 Lưu" Command="{Binding SaveCommand}" Style="{StaticResource PrimaryButton}"/>

@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="clr-namespace:LinhSonWorkspace.ViewModels"
         Title="Linh Son Workspace - Đăng Nhập" 
-        Height="550" Width="900"
+        Height="650" Width="900"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         Background="#FFFFFF">
@@ -55,26 +55,71 @@
 
         <!-- Right Side: Login Form -->
         <Border Grid.Column="1" Background="#FFFFFF">
-            <Grid Margin="50">
+            <Grid Margin="50,30">
                 <StackPanel VerticalAlignment="Center" MaxWidth="340">
                     <!-- Greeting -->
-                    <TextBlock Text="Chào mừng trở lại! 👋" FontSize="28" FontWeight="Bold" Foreground="#1F2937" Margin="0,0,0,8"/>
-                    <TextBlock Text="Vui lòng đăng nhập vào tài khoản của bạn để tiếp tục." FontSize="14" Foreground="#6B7280" Margin="0,0,0,40"/>
+                    <TextBlock Text="Chào mừng trở lại!" FontSize="28" FontWeight="Bold" Foreground="#1F2937" Margin="0,0,0,8"/>
+                    <TextBlock Text="Vui lòng đăng nhập vào tài khoản của bạn để tiếp tục." FontSize="14" Foreground="#6B7280" Margin="0,0,0,30"/>
 
                     <!-- Form -->
                     <TextBlock Text="Tên đăng nhập" Foreground="#4B5563" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,8"/>
                     <TextBox x:Name="txtUsername" Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" 
-                             Style="{StaticResource ModernTextBox}" Height="48" VerticalContentAlignment="Center" Margin="0,0,0,20"/>
+                             Style="{StaticResource ModernTextBox}" Height="44" Margin="0,0,0,16"/>
 
                     <TextBlock Text="Mật khẩu" Foreground="#4B5563" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,8"/>
-                    <PasswordBox x:Name="txtPassword" Style="{StaticResource ModernPasswordBox}" Height="48" VerticalContentAlignment="Center" Margin="0,0,0,8"/>
+                    <PasswordBox x:Name="txtPassword" Style="{StaticResource ModernPasswordBox}" Height="44" Margin="0,0,0,6"/>
 
                     <TextBlock Text="{Binding ErrorMessage}" Foreground="#EF4444" FontSize="13" FontWeight="Medium"
-                               Margin="0,4,0,20" TextWrapping="Wrap" MinHeight="18"/>
+                               Margin="0,4,0,16" TextWrapping="Wrap" MinHeight="18"/>
 
                     <Button Content="ĐĂNG NHẬP" Command="{Binding LoginCommand}" 
-                            Style="{StaticResource PrimaryButton}" Height="50" FontSize="15" Margin="0,0,0,40"
+                            Style="{StaticResource PrimaryButton}" Height="46" FontSize="14" Margin="0,0,0,16"
                             Effect="{StaticResource CardShadow}"/>
+
+                    <!-- Divider -->
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Height="1" Background="#E5E7EB" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="1" Text="hoặc" Foreground="#9CA3AF" FontSize="12" Margin="12,0"/>
+                        <Border Grid.Column="2" Height="1" Background="#E5E7EB" VerticalAlignment="Center"/>
+                    </Grid>
+
+                    <!-- Google Sign-In Button -->
+                    <Button Command="{Binding GoogleLoginCommand}" Height="46" Margin="0,0,0,30" Cursor="Hand">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="googleBorder" Background="#FFFFFF" CornerRadius="8" 
+                                        BorderBrush="#D1D5DB" BorderThickness="1.5" Padding="12,8">
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <!-- Google G Logo using Path -->
+                                        <Viewbox Width="18" Height="18" Margin="0,0,10,0">
+                                            <Canvas Width="48" Height="48">
+                                                <Path Fill="#EA4335" Data="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                                                <Path Fill="#4285F4" Data="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                                                <Path Fill="#FBBC05" Data="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+                                                <Path Fill="#34A853" Data="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                                            </Canvas>
+                                        </Viewbox>
+                                        <TextBlock Text="Đăng nhập bằng Google" FontSize="14" FontWeight="SemiBold" 
+                                                   Foreground="#374151" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="googleBorder" Property="Background" Value="#F9FAFB"/>
+                                        <Setter TargetName="googleBorder" Property="BorderBrush" Value="#9CA3AF"/>
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter TargetName="googleBorder" Property="Background" Value="#F3F4F6"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
 
                     <!-- Demo Accounts -->
                     <Border Background="#F9FAFB" CornerRadius="12" Padding="20" BorderBrush="#E5E7EB" BorderThickness="1">
