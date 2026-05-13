@@ -6,7 +6,8 @@
         Height="650" Width="900"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
-        Background="#FFFFFF">
+        Background="#FFFFFF"
+        FontFamily="Segoe UI">
 
     <Window.DataContext>
         <vm:LoginViewModel/>
@@ -58,7 +59,7 @@
             <Grid Margin="50,30">
                 <StackPanel VerticalAlignment="Center" MaxWidth="340">
                     <!-- Greeting -->
-                    <TextBlock Text="Chào mừng trở lại!" FontSize="28" FontWeight="Bold" Foreground="#1F2937" Margin="0,0,0,8"/>
+                    <TextBlock Text="Chào mừng trở lại! 👋" FontSize="28" FontWeight="Bold" Foreground="#1F2937" Margin="0,0,0,8" FontFamily="Segoe UI"/>
                     <TextBlock Text="Vui lòng đăng nhập vào tài khoản của bạn để tiếp tục." FontSize="14" Foreground="#6B7280" Margin="0,0,0,30"/>
 
                     <!-- Form -->

@@ -69,19 +69,28 @@ namespace LinhSonWorkspace.ViewModels
 
             IsLoading = true;
 
-            var user = _authService.Login(Username, Password);
-
-            if (user != null)
+            try
             {
-                SessionHelper.CurrentUser = user;
-                LoginSucceeded?.Invoke();
-            }
-            else
-            {
-                ErrorMessage = "Tên đăng nhập hoặc mật khẩu không đúng";
-            }
+                var user = _authService.Login(Username, Password);
 
-            IsLoading = false;
+                if (user != null)
+                {
+                    SessionHelper.CurrentUser = user;
+                    LoginSucceeded?.Invoke();
+                }
+                else
+                {
+                    ErrorMessage = "Tên đăng nhập hoặc mật khẩu không đúng";
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = $"Lỗi đăng nhập: {ex.Message}";
+            }
+            finally
+            {
+                IsLoading = false;
+            }
         }
 
         private async Task ExecuteGoogleLogin()
