@@ -15,7 +15,7 @@ namespace LinhSonWorkspace.Services
 {
     /// <summary>
     /// Handles Google OAuth 2.0 authentication for desktop apps using loopback redirect.
-    /// Credentials are loaded from google_auth.json (not committed to git).
+    /// Credentials are loaded from AppSettings table in the database (configured via Settings panel).
     /// </summary>
     public class GoogleAuthService
     {
@@ -23,55 +23,36 @@ namespace LinhSonWorkspace.Services
         private const string TokenEndpoint = "https://oauth2.googleapis.com/token";
         private const string UserInfoEndpoint = "https://www.googleapis.com/oauth2/v2/userinfo";
 
-        private readonly string _clientId;
-        private readonly string _clientSecret;
-        private readonly string _allowedAdminEmail;
-
         public GoogleAuthService()
         {
-            // Load credentials from external config file
-            var configPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "google_auth.json");
-            if (!File.Exists(configPath))
-            {
-                // Try project root during development
-                configPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "google_auth.json");
-            }
-
-            if (File.Exists(configPath))
-            {
-                var json = File.ReadAllText(configPath);
-                var config = JsonDocument.Parse(json);
-                var googleAuth = config.RootElement.GetProperty("GoogleAuth");
-                _clientId = googleAuth.GetProperty("ClientId").GetString() ?? "";
-                _clientSecret = googleAuth.GetProperty("ClientSecret").GetString() ?? "";
-                _allowedAdminEmail = googleAuth.GetProperty("AllowedAdminEmail").GetString() ?? "";
-            }
-            else
-            {
-                _clientId = "";
-                _clientSecret = "";
-                _allowedAdminEmail = "";
-            }
         }
-
-        /// <summary>
-        /// Checks if Google Auth is configured with valid credentials.
-        /// </summary>
-        public bool IsConfigured => !string.IsNullOrEmpty(_clientId) && !string.IsNullOrEmpty(_clientSecret);
 
         /// <summary>
         /// Initiates Google OAuth flow using loopback redirect.
         /// Opens browser, listens for callback, exchanges code for token, verifies user.
-        /// Returns User if authorized admin, null otherwise.
+        /// Returns User if authorized, null otherwise.
         /// </summary>
         public async Task<(User? user, string? error)> LoginWithGoogleAsync()
         {
-            if (!IsConfigured)
-                return (null, "Google Auth chưa được cấu hình. Vui lòng tạo file google_auth.json.");
+            string clientId = "";
+            string clientSecret = "";
 
-            // Find an available port for loopback redirect
-            int port = GetAvailablePort();
-            string redirectUri = $"http://localhost:{port}/";
+            try
+            {
+                using var settingsContext = new AppDbContext();
+                var settings = settingsContext.AppSettings.ToList();
+                clientId = settings.FirstOrDefault(s => s.SettingKey == "GoogleClientId")?.SettingValue ?? "";
+                clientSecret = settings.FirstOrDefault(s => s.SettingKey == "GoogleClientSecret")?.SettingValue ?? "";
+            }
+            catch { }
+
+            if (string.IsNullOrEmpty(clientId) || string.IsNullOrEmpty(clientSecret))
+                return (null, "Google Auth chưa được cấu hình. Vui lòng thiết lập Client ID và Secret trong phần Cài đặt.");
+
+            // Use fixed loopback redirect (must match Google Console's Authorized redirect URI)
+            // Add "http://127.0.0.1:5000/callback" to your Google Cloud Console > Credentials > Authorized redirect URIs
+            int port = 5000;
+            string redirectUri = $"http://127.0.0.1:{port}/callback";
 
             // Generate PKCE code verifier and challenge
             string codeVerifier = GenerateCodeVerifier();
@@ -80,7 +61,7 @@ namespace LinhSonWorkspace.Services
 
             // Build authorization URL
             string authUrl = $"{AuthEndpoint}?" +
-                $"client_id={Uri.EscapeDataString(_clientId)}" +
+                $"client_id={Uri.EscapeDataString(clientId)}" +
                 $"&redirect_uri={Uri.EscapeDataString(redirectUri)}" +
                 $"&response_type=code" +
                 $"&scope={Uri.EscapeDataString("openid email profile")}" +
@@ -91,7 +72,7 @@ namespace LinhSonWorkspace.Services
 
             // Start HTTP listener
             using var listener = new HttpListener();
-            listener.Prefixes.Add(redirectUri);
+            listener.Prefixes.Add($"http://127.0.0.1:{port}/callback/");
             listener.Start();
 
             // Open browser for user to authenticate
@@ -128,8 +109,8 @@ namespace LinhSonWorkspace.Services
             var tokenRequest = new FormUrlEncodedContent(new Dictionary<string, string>
             {
                 ["code"] = code,
-                ["client_id"] = _clientId,
-                ["client_secret"] = _clientSecret,
+                ["client_id"] = clientId,
+                ["client_secret"] = clientSecret,
                 ["redirect_uri"] = redirectUri,
                 ["grant_type"] = "authorization_code",
                 ["code_verifier"] = codeVerifier
@@ -157,55 +138,28 @@ namespace LinhSonWorkspace.Services
             string googleName = userInfo.RootElement.GetProperty("name").GetString()!;
             string googleId = userInfo.RootElement.GetProperty("id").GetString()!;
 
-            // Only allow admin email
-            if (!string.Equals(googleEmail, _allowedAdminEmail, StringComparison.OrdinalIgnoreCase))
-                return (null, $"Email '{googleEmail}' không được phép đăng nhập.\nChỉ admin ({_allowedAdminEmail}) mới có thể dùng Google Sign-In.");
-
-            // Find or link user in database
+            // Only allow users that already exist in the database (created by admin)
             using var dbContext = new AppDbContext();
             var user = dbContext.Users
                 .Include(u => u.Role)
-                .FirstOrDefault(u => u.Email == googleEmail || u.GoogleId == googleId);
+                .FirstOrDefault(u => u.Email == googleEmail);
 
             if (user == null)
-            {
-                // Auto-create admin user for allowed email
-                var adminRole = dbContext.Roles.FirstOrDefault(r => r.RoleName == "Admin");
-                if (adminRole == null)
-                    return (null, "Không tìm thấy role Admin trong hệ thống.");
-
-                user = new User
-                {
-                    Username = "google_admin",
-                    PasswordHash = BCrypt.Net.BCrypt.HashPassword(Guid.NewGuid().ToString()),
-                    FullName = googleName,
-                    Email = googleEmail,
-                    GoogleId = googleId,
-                    RoleId = adminRole.RoleId,
-                    IsActive = true,
-                    CreatedAt = DateTime.Now
-                };
-                dbContext.Users.Add(user);
-                await dbContext.SaveChangesAsync();
-
-                // Reload with navigation
-                user = dbContext.Users.Include(u => u.Role).First(u => u.UserId == user.UserId);
-            }
-            else
-            {
-                // Update GoogleId if not set
-                if (string.IsNullOrEmpty(user.GoogleId))
-                {
-                    user.GoogleId = googleId;
-                    await dbContext.SaveChangesAsync();
-                }
-
-                // Reload with Role navigation
-                user = dbContext.Users.Include(u => u.Role).First(u => u.UserId == user.UserId);
-            }
+                return (null, $"Email '{googleEmail}' chưa được đăng ký trong hệ thống.\nVui lòng liên hệ Admin để được tạo tài khoản.");
 
             if (!user.IsActive)
                 return (null, "Tài khoản đã bị vô hiệu hóa.");
+
+            // Link GoogleId if not yet linked
+            if (string.IsNullOrEmpty(user.GoogleId))
+            {
+                user.GoogleId = googleId;
+                user.FullName = string.IsNullOrEmpty(user.FullName) ? googleName : user.FullName;
+                await dbContext.SaveChangesAsync();
+            }
+
+            // Reload with Role navigation
+            user = dbContext.Users.Include(u => u.Role).First(u => u.UserId == user.UserId);
 
             return (user, null);
         }

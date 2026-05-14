@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="clr-namespace:LinhSonWorkspace.ViewModels"
         Title="Linh Son Workspace - Đăng Nhập" 
-        Height="650" Width="900"
+        Height="720" Width="900"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         Background="#FFFFFF"
@@ -56,8 +56,8 @@
 
         <!-- Right Side: Login Form -->
         <Border Grid.Column="1" Background="#FFFFFF">
-            <Grid Margin="50,30">
-                <StackPanel VerticalAlignment="Center" MaxWidth="340">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="50,30">
+                <StackPanel VerticalAlignment="Top" MaxWidth="340">
                     <!-- Greeting -->
                     <TextBlock Text="Chào mừng trở lại! 👋" FontSize="28" FontWeight="Bold" Foreground="#1F2937" Margin="0,0,0,8" FontFamily="Segoe UI"/>
                     <TextBlock Text="Vui lòng đăng nhập vào tài khoản của bạn để tiếp tục." FontSize="14" Foreground="#6B7280" Margin="0,0,0,30"/>
@@ -68,7 +68,28 @@
                              Style="{StaticResource ModernTextBox}" Height="44" Margin="0,0,0,16"/>
 
                     <TextBlock Text="Mật khẩu" Foreground="#4B5563" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,8"/>
-                    <PasswordBox x:Name="txtPassword" Style="{StaticResource ModernPasswordBox}" Height="44" Margin="0,0,0,6"/>
+                    <Grid Margin="0,0,0,6">
+                        <PasswordBox x:Name="txtPassword" Style="{StaticResource ModernPasswordBox}" Height="44" Padding="12,10,40,10"/>
+                        <TextBox x:Name="txtPasswordVisible" Style="{StaticResource ModernTextBox}" Height="44" Padding="12,10,40,10" Visibility="Collapsed"/>
+                        <Button x:Name="btnTogglePassword" Click="BtnTogglePassword_Click" 
+                                Width="32" Height="32" HorizontalAlignment="Right" Margin="0,0,6,0" 
+                                Background="Transparent" BorderThickness="0" Cursor="Hand" ToolTip="Hiển thị mật khẩu">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="Transparent">
+                                        <Viewbox Width="18" Height="18">
+                                            <Path x:Name="eyeIcon" Fill="#9CA3AF" Data="M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17M12,4.5C7,4.5 2.73,7.61 1,12C2.73,16.39 7,19.5 12,19.5C17,19.5 21.27,16.39 23,12C21.27,7.61 17,4.5 12,4.5Z"/>
+                                        </Viewbox>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="eyeIcon" Property="Fill" Value="#6B7280"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </Grid>
 
                     <TextBlock Text="{Binding ErrorMessage}" Foreground="#EF4444" FontSize="13" FontWeight="Medium"
                                Margin="0,4,0,16" TextWrapping="Wrap" MinHeight="18"/>
@@ -153,7 +174,7 @@
                         </StackPanel>
                     </Border>
                 </StackPanel>
-            </Grid>
+            </ScrollViewer>
         </Border>
     </Grid>
 </Window>

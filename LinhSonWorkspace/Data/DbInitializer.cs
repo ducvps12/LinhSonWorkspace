@@ -17,14 +17,23 @@ namespace LinhSonWorkspace.Data
             // Ensure database is created
             context.Database.EnsureCreated();
 
-            // Force create AppSettings table if missing
+            // Fix AppSettings table: drop old schema if columns don't match, then recreate
             context.Database.ExecuteSqlRaw(@"
+                IF EXISTS (SELECT * FROM sysobjects WHERE name='AppSettings' and xtype='U')
+                    AND NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID('AppSettings') AND name = 'SettingKey')
+                BEGIN
+                    DROP TABLE [AppSettings];
+                END;
+
                 IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='AppSettings' and xtype='U')
                 CREATE TABLE [AppSettings] (
-                    [Key] nvarchar(450) NOT NULL,
-                    [Value] nvarchar(max) NOT NULL,
-                    [Description] nvarchar(max) NULL,
-                    CONSTRAINT [PK_AppSettings] PRIMARY KEY ([Key])
+                    [Id] int IDENTITY(1,1) NOT NULL,
+                    [SettingKey] nvarchar(100) NOT NULL,
+                    [SettingValue] nvarchar(500) NOT NULL DEFAULT '',
+                    [Category] nvarchar(50) NOT NULL DEFAULT 'General',
+                    [Description] nvarchar(200) NOT NULL DEFAULT '',
+                    [UpdatedAt] datetime2 NOT NULL DEFAULT GETDATE(),
+                    CONSTRAINT [PK_AppSettings] PRIMARY KEY ([Id])
                 );");
 
             // Check if data already seeded

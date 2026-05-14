@@ -6,10 +6,6 @@
 # dotenv files
 .env
 
-# Google Auth secrets
-google_auth.json
-**/google_auth.json
-
 # Misc
 power.txt
 # User-specific files
@@ -488,3 +484,6 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+g o o g l e _ a u t h . j s o n  
+ * * / g o o g l e _ a u t h . j s o n  
+ 

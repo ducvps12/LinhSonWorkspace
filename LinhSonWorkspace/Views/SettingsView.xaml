@@ -7,6 +7,67 @@
         <converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
         <converters:BoolToVisibilityConverter x:Key="BoolToVis"/>
         <converters:StatusToColorConverter x:Key="StatusToColor"/>
+        
+        <Style TargetType="TabControl" x:Key="ModernSettingsTabControl">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="0,20,0,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabControl">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            
+                            <Border Grid.Row="0" Background="#1F2937" CornerRadius="8">
+                                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Hidden">
+                                    <StackPanel IsItemsHost="True" Orientation="Horizontal" Background="Transparent" Margin="5"/>
+                                </ScrollViewer>
+                            </Border>
+                            
+                            <ContentPresenter Grid.Row="1" ContentSource="SelectedContent" Margin="{TemplateBinding Padding}"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="TabItem" x:Key="ModernSettingsTabItem">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#9CA3AF"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="20,12"/>
+            <Setter Property="Margin" Value="2,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" CornerRadius="6">
+                            <ContentPresenter ContentSource="Header" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Foreground" Value="#1F2937"/>
+                                <Setter Property="Background" Value="#FFFFFF"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Cursor" Value="Hand"/>
+                                <Setter Property="Foreground" Value="#FFFFFF"/>
+                            </Trigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsMouseOver" Value="True"/>
+                                    <Condition Property="IsSelected" Value="True"/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="Foreground" Value="#1F2937"/>
+                            </MultiTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </UserControl.Resources>
 
     <Grid>
@@ -53,7 +114,71 @@
                     </TextBlock>
                 </Border>
 
-                <!-- ==================== USER MANAGEMENT ==================== -->
+                                <TabControl Style="{StaticResource ModernSettingsTabControl}">
+                    <!-- Tab 1: General Info -->
+                    <TabItem Header="THÔNG TIN CHUNG" Style="{StaticResource ModernSettingsTabItem}">
+<!-- ==================== GENERAL SETTINGS ==================== -->
+                <Border Style="{StaticResource ContentCard}" Margin="0,0,0,20">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                            <Border Background="#EFF6FF" CornerRadius="10" Width="40" Height="40" Margin="0,0,12,0">
+                                <TextBlock Text="🏢" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="Cấu hình chung" FontSize="16" FontWeight="Bold" Foreground="#1F2937"/>
+                                <TextBlock Text="Thông tin cơ bản của workspace" FontSize="11" Foreground="#9CA3AF"/>
+                            </StackPanel>
+                        </StackPanel>
+                        
+                        <Border Height="1" Background="#F3F4F6" Margin="0,0,0,15"/>
+
+                        <!-- App Title -->
+                        <StackPanel Margin="0,0,0,12">
+                            <TextBlock Text="Tên ứng dụng" Foreground="#6B7280" FontSize="12" FontWeight="Medium" Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding AppTitle, UpdateSourceTrigger=PropertyChanged}" 
+                                     Style="{StaticResource ModernTextBox}"/>
+                        </StackPanel>
+
+                        <!-- Contact Phone & Email -->
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="15"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Số điện thoại liên hệ" Foreground="#6B7280" FontSize="12" FontWeight="Medium" Margin="0,0,0,4"/>
+                                <TextBox Text="{Binding ContactPhone, UpdateSourceTrigger=PropertyChanged}" 
+                                         Style="{StaticResource ModernTextBox}"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="Email liên hệ" Foreground="#6B7280" FontSize="12" FontWeight="Medium" Margin="0,0,0,4"/>
+                                <TextBox Text="{Binding ContactEmail, UpdateSourceTrigger=PropertyChanged}" 
+                                         Style="{StaticResource ModernTextBox}"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <!-- Address -->
+                        <StackPanel Margin="0,0,0,18">
+                            <TextBlock Text="Địa chỉ" Foreground="#6B7280" FontSize="12" FontWeight="Medium" Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding Address, UpdateSourceTrigger=PropertyChanged}" 
+                                     Style="{StaticResource ModernTextBox}" TextWrapping="Wrap" 
+                                     AcceptsReturn="True" Height="60"/>
+                        </StackPanel>
+
+                        <!-- Save General Button -->
+                        <Button Content="💾 Lưu cấu hình chung" Command="{Binding SaveGeneralCommand}" 
+                                Style="{StaticResource PrimaryButton}" HorizontalAlignment="Left"/>
+                    </StackPanel>
+                </Border>
+
+                                    </TabItem>
+
+                    <!-- Tab 2: User Management -->
+                    <TabItem Header="NGƯỜI DÙNG" Style="{StaticResource ModernSettingsTabItem}">
+<!-- ==================== USER MANAGEMENT ==================== -->
                 <Border Style="{StaticResource ContentCard}" Margin="0,0,0,20">
                     <StackPanel>
                         <!-- Section Header -->
@@ -119,7 +244,12 @@
                     </StackPanel>
                 </Border>
 
-                <!-- ==================== SMTP CONFIGURATION ==================== -->
+                                    </TabItem>
+
+                    <!-- Tab 3: Email SMTP -->
+                    <TabItem Header="EMAIL SMTP" Style="{StaticResource ModernSettingsTabItem}">
+                        <StackPanel>
+<!-- ==================== SMTP CONFIGURATION ==================== -->
                 <Border Style="{StaticResource ContentCard}" Margin="0,0,0,20">
                     <StackPanel>
                         <!-- Section Header -->
@@ -258,63 +388,6 @@
                     </StackPanel>
                 </Border>
 
-                <!-- ==================== GENERAL SETTINGS ==================== -->
-                <Border Style="{StaticResource ContentCard}" Margin="0,0,0,20">
-                    <StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
-                            <Border Background="#EFF6FF" CornerRadius="10" Width="40" Height="40" Margin="0,0,12,0">
-                                <TextBlock Text="🏢" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Border>
-                            <StackPanel VerticalAlignment="Center">
-                                <TextBlock Text="Cấu hình chung" FontSize="16" FontWeight="Bold" Foreground="#1F2937"/>
-                                <TextBlock Text="Thông tin cơ bản của workspace" FontSize="11" Foreground="#9CA3AF"/>
-                            </StackPanel>
-                        </StackPanel>
-                        
-                        <Border Height="1" Background="#F3F4F6" Margin="0,0,0,15"/>
-
-                        <!-- App Title -->
-                        <StackPanel Margin="0,0,0,12">
-                            <TextBlock Text="Tên ứng dụng" Foreground="#6B7280" FontSize="12" FontWeight="Medium" Margin="0,0,0,4"/>
-                            <TextBox Text="{Binding AppTitle, UpdateSourceTrigger=PropertyChanged}" 
-                                     Style="{StaticResource ModernTextBox}"/>
-                        </StackPanel>
-
-                        <!-- Contact Phone & Email -->
-                        <Grid Margin="0,0,0,12">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="15"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-
-                            <StackPanel Grid.Column="0">
-                                <TextBlock Text="Số điện thoại liên hệ" Foreground="#6B7280" FontSize="12" FontWeight="Medium" Margin="0,0,0,4"/>
-                                <TextBox Text="{Binding ContactPhone, UpdateSourceTrigger=PropertyChanged}" 
-                                         Style="{StaticResource ModernTextBox}"/>
-                            </StackPanel>
-
-                            <StackPanel Grid.Column="2">
-                                <TextBlock Text="Email liên hệ" Foreground="#6B7280" FontSize="12" FontWeight="Medium" Margin="0,0,0,4"/>
-                                <TextBox Text="{Binding ContactEmail, UpdateSourceTrigger=PropertyChanged}" 
-                                         Style="{StaticResource ModernTextBox}"/>
-                            </StackPanel>
-                        </Grid>
-
-                        <!-- Address -->
-                        <StackPanel Margin="0,0,0,18">
-                            <TextBlock Text="Địa chỉ" Foreground="#6B7280" FontSize="12" FontWeight="Medium" Margin="0,0,0,4"/>
-                            <TextBox Text="{Binding Address, UpdateSourceTrigger=PropertyChanged}" 
-                                     Style="{StaticResource ModernTextBox}" TextWrapping="Wrap" 
-                                     AcceptsReturn="True" Height="60"/>
-                        </StackPanel>
-
-                        <!-- Save General Button -->
-                        <Button Content="💾 Lưu cấu hình chung" Command="{Binding SaveGeneralCommand}" 
-                                Style="{StaticResource PrimaryButton}" HorizontalAlignment="Left"/>
-                    </StackPanel>
-                </Border>
-
                 <!-- ==================== SMTP GUIDE ==================== -->
                 <Border Style="{StaticResource ContentCard}">
                     <StackPanel>
@@ -380,6 +453,45 @@
                     </StackPanel>
                 </Border>
 
+                                    </StackPanel>
+                    </TabItem>
+
+                    <!-- Tab 4: Google Auth -->
+                    <TabItem Header="GOOGLE AUTH" Style="{StaticResource ModernSettingsTabItem}">
+<!-- ==================== GOOGLE AUTH CONFIGURATION ==================== -->
+                <Border Style="{StaticResource ContentCard}" Margin="0,0,0,20">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                            <Border Background="#FEE2E2" CornerRadius="10" Width="40" Height="40" Margin="0,0,12,0">
+                                <TextBlock Text="🔑" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="Cấu hình Google Auth" FontSize="16" FontWeight="Bold" Foreground="#1F2937"/>
+                                <TextBlock Text="Tích hợp Đăng nhập bằng Google" FontSize="11" Foreground="#9CA3AF"/>
+                            </StackPanel>
+                        </StackPanel>
+                        
+                        <Border Height="1" Background="#F3F4F6" Margin="0,0,0,15"/>
+
+                        <StackPanel Margin="0,0,0,12">
+                            <TextBlock Text="Client ID" Foreground="#6B7280" FontSize="12" FontWeight="Medium" Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding GoogleClientId, UpdateSourceTrigger=PropertyChanged}" 
+                                     Style="{StaticResource ModernTextBox}"/>
+                        </StackPanel>
+
+                        <StackPanel Margin="0,0,0,18">
+                            <TextBlock Text="Client Secret" Foreground="#6B7280" FontSize="12" FontWeight="Medium" Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding GoogleClientSecret, UpdateSourceTrigger=PropertyChanged}" 
+                                     Style="{StaticResource ModernTextBox}"/>
+                        </StackPanel>
+
+                        <Button Content="💾 Lưu cấu hình Google" Command="{Binding SaveGoogleAuthCommand}" 
+                                Style="{StaticResource PrimaryButton}" HorizontalAlignment="Left"/>
+                    </StackPanel>
+                </Border>
+
+                                    </TabItem>
+                </TabControl>
             </StackPanel>
         </ScrollViewer>
 

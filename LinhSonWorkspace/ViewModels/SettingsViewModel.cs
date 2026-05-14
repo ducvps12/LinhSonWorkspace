@@ -90,6 +90,21 @@ namespace LinhSonWorkspace.ViewModels
             set => SetProperty(ref _address, value);
         }
 
+        // ========== Google Auth Settings ==========
+        private string _googleClientId = string.Empty;
+        public string GoogleClientId
+        {
+            get => _googleClientId;
+            set => SetProperty(ref _googleClientId, value);
+        }
+
+        private string _googleClientSecret = string.Empty;
+        public string GoogleClientSecret
+        {
+            get => _googleClientSecret;
+            set => SetProperty(ref _googleClientSecret, value);
+        }
+
         // ========== Test Email ==========
         private string _testEmailAddress = string.Empty;
         public string TestEmailAddress
@@ -188,6 +203,7 @@ namespace LinhSonWorkspace.ViewModels
         // ========== Commands ==========
         public ICommand SaveSmtpCommand { get; }
         public ICommand SaveGeneralCommand { get; }
+        public ICommand SaveGoogleAuthCommand { get; }
         public ICommand SendTestEmailCommand { get; }
 
         public ICommand RefreshUsersCommand { get; }
@@ -202,6 +218,7 @@ namespace LinhSonWorkspace.ViewModels
         {
             SaveSmtpCommand = new AsyncRelayCommand(ExecuteSaveSmtp);
             SaveGeneralCommand = new AsyncRelayCommand(ExecuteSaveGeneral);
+            SaveGoogleAuthCommand = new AsyncRelayCommand(ExecuteSaveGoogleAuth);
             SendTestEmailCommand = new AsyncRelayCommand(ExecuteSendTestEmail);
             
             RefreshUsersCommand = new RelayCommand(LoadUsers);
@@ -238,6 +255,9 @@ namespace LinhSonWorkspace.ViewModels
                 ContactPhone = GetSetting(settings, "ContactPhone");
                 ContactEmail = GetSetting(settings, "ContactEmail");
                 Address = GetSetting(settings, "Address");
+
+                GoogleClientId = GetSetting(settings, "GoogleClientId");
+                GoogleClientSecret = GetSetting(settings, "GoogleClientSecret");
             }
             catch (Exception ex)
             {
@@ -335,6 +355,38 @@ namespace LinhSonWorkspace.ViewModels
                 });
 
                 StatusMessage = "✅ Đã lưu cấu hình chung thành công!";
+                IsSuccess = true;
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"❌ Lỗi: {ex.Message}";
+                IsSuccess = false;
+            }
+            finally
+            {
+                IsSaving = false;
+            }
+        }
+
+        /// <summary>
+        /// Saves Google Auth settings to database.
+        /// </summary>
+        private async Task ExecuteSaveGoogleAuth()
+        {
+            IsSaving = true;
+            StatusMessage = "";
+
+            try
+            {
+                await Task.Run(() =>
+                {
+                    using var context = new AppDbContext();
+                    SaveSetting(context, "GoogleClientId", GoogleClientId, "GoogleAuth", "Google OAuth Client ID");
+                    SaveSetting(context, "GoogleClientSecret", GoogleClientSecret, "GoogleAuth", "Google OAuth Client Secret");
+                    context.SaveChanges();
+                });
+
+                StatusMessage = "✅ Đã lưu cấu hình Google Auth thành công!";
                 IsSuccess = true;
             }
             catch (Exception ex)
